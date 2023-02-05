@@ -22,8 +22,6 @@ class Frame(abc.ABC):
         self._append_roll(roll)
         self._standing_pins -= roll
         self._adjust_spare_strike(roll)
-        print('frame rolls:', self._frame_rolls, self.frame_is_full(), self._expected_frame_rolls)
-        print('bonus rolls:', self._bonus_rolls, self.bonus_is_full(), self._expected_bonus_rolls)
 
     def _append_roll(self, roll):
         if not self.frame_is_full():

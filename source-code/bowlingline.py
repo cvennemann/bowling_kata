@@ -27,7 +27,6 @@ class BowlingLine:
 
         while not self.__game_over():
             roll = next(roll_gen)
-            print(roll)
             self.send_roll_to_frames(roll)
 
     def __game_over(self) -> bool:
@@ -39,5 +38,4 @@ class BowlingLine:
         final_score = 0
         for finished_frame in self.__frames:
             final_score += finished_frame.get_total_score()
-            # print(final_score)
         return final_score

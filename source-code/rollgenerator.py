@@ -3,7 +3,7 @@ import abc
 
 class Rollgenerator(abc.ABC):
     @abc.abstractmethod
-    def get_next_roll(self):
+    def get_roll_generator(self):
         pass
 
 
@@ -42,6 +42,6 @@ class StringToRollGenerator(Rollgenerator):
 
         return rolls_as_int
 
-    def get_next_roll(self):
+    def get_roll_generator(self):
         for number in self.__rolls_as_int:
             yield number

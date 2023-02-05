@@ -9,31 +9,28 @@ class Frame(abc.ABC):
         self._frame_rolls = []
         self._bonus_rolls = []
 
-        self._frame_is_full = False
-        self._bonus_is_full = False
+    def frame_is_full(self):
+        return len(self._frame_rolls) == self._expected_frame_rolls
+
+    def bonus_is_full(self):
+        return len(self._bonus_rolls) == self._expected_bonus_rolls
+
+    def is_full(self):
+        return self.frame_is_full() and self.bonus_is_full()
 
     def receive_a_roll(self, roll: int):
         self._append_roll(roll)
         self._standing_pins -= roll
         self._adjust_spare_strike(roll)
-        self._set_frame_state()
-
-        return self._frame_is_full, self._bonus_is_full
-
-    def _set_frame_state(self):
-        if not self._expected_frame_rolls:
-            self._frame_is_full = True
-        if not self._expected_bonus_rolls:
-            self._bonus_is_full = True
+        print('frame rolls:', self._frame_rolls, self.frame_is_full(), self._expected_frame_rolls)
+        print('bonus rolls:', self._bonus_rolls, self.bonus_is_full(), self._expected_bonus_rolls)
 
     def _append_roll(self, roll):
-        if self._expected_frame_rolls:
+        if not self.frame_is_full():
             self._frame_rolls.append(roll)
-            self._expected_frame_rolls -= 1
 
-        elif self._expected_bonus_rolls:
+        elif not self.bonus_is_full():
             self._bonus_rolls.append(roll)
-            self._expected_bonus_rolls -= 1
 
     @abc.abstractmethod
     def _adjust_spare_strike(self, roll):
@@ -54,8 +51,8 @@ class RegularFrame(Frame):
         if self._standing_pins:
             return
 
-        if len(self._frame_rolls) == 1:
-            self._expected_frame_rolls = 0
+        if self._frame_rolls == [10]:
+            self._expected_frame_rolls = 1
             self._expected_bonus_rolls = 2
         else:
             self._expected_bonus_rolls = 1
@@ -66,11 +63,11 @@ class LastFrame(Frame):
         if self._standing_pins:
             return
 
-        if len(self._frame_rolls) == 1:
-            self._expected_frame_rolls = 2
+        if self._frame_rolls[0] == 10:
+            self._expected_frame_rolls = 3
             self._expected_bonus_rolls = 0
             self._standing_pins = 10
 
-        elif len(self._frame_rolls) == 2:
-            self._expected_frame_rolls = 1
+        elif sum(self._frame_rolls[0:2]) == 10:
+            self._expected_frame_rolls = 3
             self._standing_pins = 10

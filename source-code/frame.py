@@ -2,39 +2,75 @@ import abc
 
 
 class Frame(abc.ABC):
-    def receive_a_roll(self, num_pins: int) -> bool:
-        pass
+    def __init__(self):
+        self._standing_pins = 10
+        self._expected_frame_rolls = 2
+        self._expected_bonus_rolls = 0
+        self._frame_rolls = []
+        self._bonus_rolls = []
+
+        self._frame_is_full = False
+        self._bonus_is_full = False
+
+    def receive_a_roll(self, roll: int):
+        self._append_roll(roll)
+        self._standing_pins -= roll
+        self._adjust_spare_strike(roll)
+        self._set_frame_state()
+
+        return self._frame_is_full, self._bonus_is_full
+
+    def _set_frame_state(self):
+        if not self._expected_frame_rolls:
+            self._frame_is_full = True
+        if not self._expected_bonus_rolls:
+            self._bonus_is_full = True
+
+    def _append_roll(self, roll):
+        if self._expected_frame_rolls:
+            self._frame_rolls.append(roll)
+            self._expected_frame_rolls -= 1
+
+        elif self._expected_bonus_rolls:
+            self._bonus_rolls.append(roll)
+            self._expected_bonus_rolls -= 1
 
     @abc.abstractmethod
-    def get_base_score(self):
+    def _adjust_spare_strike(self, roll):
         pass
 
-    @abc.abstractmethod
-    def get_bonus_rolls_score(self):
-        pass
+    def get_base_score(self) -> int:
+        return sum(self._frame_rolls)
 
-    @abc.abstractmethod
-    def get_total_score(self):
-        pass
+    def get_bonus_score(self) -> int:
+        return sum(self._bonus_rolls)
+
+    def get_total_score(self) -> int:
+        return self.get_base_score() + self.get_bonus_score()
 
 
 class RegularFrame(Frame):
-    def get_base_score(self) -> int:
-        return -1
+    def _adjust_spare_strike(self, roll):
+        if self._standing_pins:
+            return
 
-    def get_bonus_rolls_score(self) -> int:
-        return -1
-
-    def get_total_score(self) -> int:
-        return -1
+        if len(self._frame_rolls) == 1:
+            self._expected_frame_rolls = 0
+            self._expected_bonus_rolls = 2
+        else:
+            self._expected_bonus_rolls = 1
 
 
 class LastFrame(Frame):
-    def get_base_score(self) -> int:
-        return -1
+    def _adjust_spare_strike(self, roll):
+        if self._standing_pins:
+            return
 
-    def get_bonus_rolls_score(self) -> int:
-        return -1
+        if len(self._frame_rolls) == 1:
+            self._expected_frame_rolls = 2
+            self._expected_bonus_rolls = 0
+            self._standing_pins = 10
 
-    def get_total_score(self) -> int:
-        return -1
+        elif len(self._frame_rolls) == 2:
+            self._expected_frame_rolls = 1
+            self._standing_pins = 10

@@ -27,11 +27,11 @@ class TestRegularFrame(TestCase):
         self.reg_frame3.receive_a_roll(5)
 
     def test_get_base_score(self):
-        print('Testing RegularFrame.get_base_score()')
-        self.assertEqual(self.reg_frame0.get_base_score(), 0)
-        self.assertEqual(self.reg_frame1.get_base_score(), 9)
-        self.assertEqual(self.reg_frame2.get_base_score(), 10)
-        self.assertEqual(self.reg_frame3.get_base_score(), 10)
+        print('Testing RegularFrame.get_regular_score()')
+        self.assertEqual(self.reg_frame0.get_regular_score(), 0)
+        self.assertEqual(self.reg_frame1.get_regular_score(), 9)
+        self.assertEqual(self.reg_frame2.get_regular_score(), 10)
+        self.assertEqual(self.reg_frame3.get_regular_score(), 10)
 
     def test_get_bonus_score(self):
         print('Testing RegularFrame.get_bonus_score()')
@@ -79,12 +79,12 @@ class TestLastFrame(TestCase):
         self.last_frame4.receive_a_roll(10)
 
     def test_get_base_score(self):
-        print("Testing LastFrame.get_base_score()")
-        self.assertEqual(self.last_frame0.get_base_score(), 0)
-        self.assertEqual(self.last_frame1.get_base_score(), 9)
-        self.assertEqual(self.last_frame2.get_base_score(), 15)
-        self.assertEqual(self.last_frame3.get_base_score(), 18)
-        self.assertEqual(self.last_frame4.get_base_score(), 30)
+        print("Testing LastFrame.get_regular_score()")
+        self.assertEqual(self.last_frame0.get_regular_score(), 0)
+        self.assertEqual(self.last_frame1.get_regular_score(), 9)
+        self.assertEqual(self.last_frame2.get_regular_score(), 15)
+        self.assertEqual(self.last_frame3.get_regular_score(), 18)
+        self.assertEqual(self.last_frame4.get_regular_score(), 30)
 
     def test_get_bonus_score(self):
         print("Testing LastFrame.get_bonus_score()")

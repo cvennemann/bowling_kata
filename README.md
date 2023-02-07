@@ -1,8 +1,12 @@
 # Bowling kata
+	
+	This is my exercise / attempt at solving the bowling kata using test driven development and object orientation.
+	
+	Source: https://codingdojo.org/kata/Bowling/
 
 ### Description:
-    - input: string representing a full game of valid rolls
-    - output: total bowling score
+    - [DONE] input: string representing a full game of valid rolls
+    - [DONE] output: total bowling score
     
     NOT part of the original kata but maybe in the future:
     - check for valid rolls
@@ -35,7 +39,7 @@
         +------^-----+          +----------------+            +--------^--------+
               /_\                                                     /_\
                |                                                       |
-           ____|____________________                           ________|_______________________ _ _ _ 
+           ____|____________________                           ________|_______________________ 
            |                       |                           |                              |
            |                       |                           |                              |
        +----------------+    +--------------+       +-------------------------+    +----------------------+

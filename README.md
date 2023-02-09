@@ -5,13 +5,21 @@
 	Source: https://codingdojo.org/kata/Bowling/
 
 ### Description:
+
+	Core Features:
     - [DONE] input: string representing a full game of valid rolls
     - [DONE] output: total bowling score
     
     NOT part of the original kata but maybe in the future:
     - check for valid rolls
     - check for correct number of rolls and frames
-    - provide scores for intermediate frames
+    - [DONE] provide scores for intermediate frames
+	
+	What I think would be fun:
+	- [DONE] ASCII style console output similar to a traditional bowling core sheet
+	- console user input
+	- can track multiple games 
+	- for multiple players
 
 ### Entities of the Bowling game:
     - roll: the number of pins knocked down by one ball
@@ -25,15 +33,22 @@
                          and two tries otherwise.
 
 ### Basic idea:
-        The BowlingLine gets roll values one by one from a RollGenerator and passes them on to the current Frame.
-        Each Frame will track its own tries and score and will inform the BowlingLine when it is full.
-        The BowlingLine will then pass the next roll value to the next Frame until all ten Frames are filled.
-        The BowlingLine summs up all Frame-scores and returns the final score.
-
-        Bonus: different ways of generating rolls, e.g. user input
-
-
-        +------------+          +----------------+            +-----------------+
+        The BowlingLine gets roll values one by one from a RollGenerator and passes them on to its list of Frames.
+        Each Frame will accept rolls and calculate its score until it is full. A new Frame will be added if necessary.
+		When the tenth Frame is full, the game is over.
+		For output, the BowlingLine can take the Frames' scores and passes them on to one or several ScoreOutput classes.
+		
+		
+		
+		                          +---------------+        +-----------------
+		                          |  <abstract>   |<|------|
+		                          |  ScoreOutput  |        |
+		                          +-------+-------+        +
+		                                  |
+		                                  |
+                                          |
+                                         \-/
+        +------------+          +---------v------+            +-----------------+
         | <abstract> |--------<>|  BowlingLine   |<>----------|    <abstract>   |
         |   Frame    |          |                |            |  RollGenerator  |
         +------^-----+          +----------------+            +--------^--------+

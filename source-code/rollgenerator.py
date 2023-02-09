@@ -60,3 +60,22 @@ class StringToRollGenerator(RollGenerator):
     def get_next_roll(self) -> int:
         # Returns the next value of the generator function.
         return next(self.__roll_generator)
+
+
+class InputRollGenerator(RollGenerator):
+    """
+    Generates rolls from user input.
+    So far accepts numbers from 0 to 10.
+    Does not yet check for invalid numbers.
+    """
+    def get_next_roll(self):
+        while True:
+            roll = input("\nInput the value of the next roll: ")
+            if not roll.isdecimal():
+                continue
+
+            roll = int(roll)
+            if not 0 <= roll <= 10:
+                continue
+            break
+        return roll

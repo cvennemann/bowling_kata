@@ -1,5 +1,5 @@
 from unittest import TestCase
-from frame import RegularFrame, LastFrame
+from bowlingframe import RegularFrame, LastFrame
 
 
 class TestRegularFrame(TestCase):

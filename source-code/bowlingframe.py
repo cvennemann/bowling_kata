@@ -15,6 +15,10 @@ class Frame(abc.ABC):
         self._regular_rolls: list = []
         self._bonus_rolls: list = []
 
+    @property
+    def regular_rolls(self):
+        return self._regular_rolls
+
     def regular_rolls_are_full(self) -> bool:
         return len(self._regular_rolls) == self._expected_frame_rolls
 
@@ -43,7 +47,8 @@ class Frame(abc.ABC):
         return sum(self._bonus_rolls)
 
     def get_total_score(self) -> int:
-        return self.get_regular_score() + self.get_bonus_score()
+        if self.is_full():
+            return self.get_regular_score() + self.get_bonus_score()
 
     @abc.abstractmethod
     def _adjust_expectations_on_spare_strike(self, roll: int):

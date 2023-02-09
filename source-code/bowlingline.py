@@ -14,14 +14,14 @@ class BowlingLine:
         (= the amount of pins knocked down with one ball) one by one.
     Each roll value is passed to each non-full Frame in self.__frames.
     The BowlingLine will add up all Frame scores to calculate the final score.
-    The BowlingLine can pass its Frames' roll values and scores to an out TerminalOutput object to generate output.
+    The BowlingLine can pass its Frames' roll values and scores to an out ConsoleOutput object to generate output.
     """
     def __init__(self, roll_generator: rollgenerator.RollGenerator):
         self.__roll_generator = roll_generator
         self.__frames = []
         self.__output_methods = set()
 
-    def add_output_method(self, output: scoreoutput.TerminalOutput):
+    def add_output_method(self, output: scoreoutput.ConsoleOutput):
         self.__output_methods.add(output)
 
     def remove_output_method(self):
@@ -57,9 +57,9 @@ class BowlingLine:
 
     def __send_roll_to_frames(self, roll):
         self.__add_new_frame()
-        for a_frame in self.__frames:
-            if not a_frame.is_full():
-                a_frame.receive_a_roll(roll)
+        for frame in self.__frames:
+            if not frame.is_full():
+                frame.receive_a_roll(roll)
 
     def __run_bowling_game(self):
         while not self.__is_game_over():

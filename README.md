@@ -17,7 +17,7 @@
 	
 	What I think would be fun:
 	- [DONE] ASCII style console output similar to a traditional bowling core sheet
-	- console user input
+	- [DONE] console user input
 	- can track multiple games 
 	- for multiple players
 
@@ -39,11 +39,10 @@
 		For output, the BowlingLine can take the Frames' scores and passes them on to one or several ScoreOutput classes.
 		
 		
-		
-		                          +---------------+        +-----------------
-		                          |  <abstract>   |<|------|
-		                          |  ScoreOutput  |        |
-		                          +-------+-------+        +
+		                          +---------------+        +-----------------+
+		                          |  <abstract>   |<|------|  ConsoleOutput  |
+		                          |  ScoreOutput  |        |                 |
+		                          +-------+-------+        +-----------------+
 		                                  |
 		                                  |
                                           |
@@ -58,6 +57,6 @@
            |                       |                           |                              |
            |                       |                           |                              |
        +----------------+    +--------------+       +-------------------------+    +----------------------+
-       |  RegularFrame  |    |  LastFrame   |       |  StringToRollGenerator  |    |  [...]RollGenerator  |
+       |  RegularFrame  |    |  LastFrame   |       |  StringToRollGenerator  |    |  InputRollGenerator  |
        |                |    |              |       |                         |    |                      |
        +----------------+    +--------------+       +-------------------------+    +----------------------+

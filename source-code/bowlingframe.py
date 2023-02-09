@@ -6,7 +6,8 @@ class Frame(abc.ABC):
     A Frame receives individual rolls and counts them according to the bowling rules.
     If a Frame has received fewer regular rolls than expected, rolls will be appended to self._regular_rolls.
     Else, if a Frame has received fewer bonus rolls than expected, rolls will be appended to self._bonus_rolls.
-    A Frame can return its regular score, bonus score and total score.
+    A Frame can return its regular score, bonus score and total score, its regular rolls,
+    and weather or not its regular, bonus or total rolls are full.
     """
     def __init__(self):
         self._standing_pins: int = 10
@@ -80,10 +81,5 @@ class LastFrame(Frame):
         if self._standing_pins:
             return
 
-        if self._regular_rolls == [10]:
-            self._expected_frame_rolls = 3
-            self._standing_pins = 10
-
-        elif sum(self._regular_rolls[0:2]) == 10:
-            self._expected_frame_rolls = 3
-            self._standing_pins = 10
+        self._expected_frame_rolls = 3
+        self._standing_pins = 10

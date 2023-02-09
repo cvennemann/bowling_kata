@@ -23,52 +23,58 @@ class ScoreOutput(abc.ABC):
         pass
 
 
-class TerminalOutput(ScoreOutput):
+class ConsoleOutput(ScoreOutput):
     """
-    TerminalOutput Prints the results of a complete or incomplete bowling game to console in a neat little ASCII table.
+    ConsoleOutput Prints the results of a complete or incomplete bowling game to console in a neat little ASCII table.
 
-    If the TerminalOutput in instantiated with a valid argument for the time.sleep() function,
+    If the ConsoleOutput in instantiated with a valid argument for the time.sleep() function,
     the program will pause for that long after the output has been printed to console.
     """
     def __init__(self, pause_seconds=0):
         super().__init__()
         self.__pause_seconds = pause_seconds
+        self.__output_str = ''
 
-        self.__print_empty_table()
-
-    def __print_empty_table(self):
-        self.__clear()
-        print("+-------+-------+-------+-------+-------+-------+-------+-------+-------+-----------+")
-        print("|   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |     10    |")
-        print("+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+")
-        print("|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |")
-        print("|   +---|   +---|   +---|   +---|   +---|   +---|   +---|   +---|   +---|   +---+---+")
-        print("|       |       |       |       |       |       |       |       |       |           |")
-        print("+-------+-------+-------+-------+-------+-------+-------+-------+-------+-----------+")
+        self.__make_empty_table_str()
 
     @staticmethod
     def __clear():
         os.system('cls' if os.name == 'nt' else 'clear')
 
+    def __print_output_str(self):
+        self.__clear()
+        print(self.__output_str)
+        self.__output_str = ''
+
+    def __make_empty_table_str(self):
+        self.__output_str += "+-------+-------+-------+-------+-------+-------+-------+-------+-------+-----------+\n"
+        self.__output_str += "|   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |     10    |\n"
+        self.__output_str += "+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+\n"
+        self.__output_str += "|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |\n"
+        self.__output_str += "|   +---|   +---|   +---|   +---|   +---|   +---|   +---|   +---|   +---|   +---+---+\n"
+        self.__output_str += "|       |       |       |       |       |       |       |       |       |           |\n"
+        self.__output_str += "+-------+-------+-------+-------+-------+-------+-------+-------+-------+-----------+\n"
+
+        self.__print_output_str()
+
     def generate_output(self, input_data: tuple):
         self._frame_rolls = input_data
+        self.__make_output_str()
+        self.__print_output_str()
 
-        self.__clear()
-        print("+-------+-------+-------+-------+-------+-------+-------+-------+-------+-----------+")
-        print("|   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |     10    |")
-        print("+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+")
+        if self.__pause_seconds:
+            time.sleep(self.__pause_seconds)
 
+    def __make_output_str(self):
+        self.__output_str += "+-------+-------+-------+-------+-------+-------+-------+-------+-------+-----------+\n"
+        self.__output_str += "|   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |     10    |\n"
+        self.__output_str += "+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+\n"
         roll_value_string = self.__draw_roll_values()
-        print(roll_value_string)
-
-        print("|   +---|   +---|   +---|   +---|   +---|   +---|   +---|   +---|   +---|   +---+---+")
-
+        self.__output_str += roll_value_string + '\n'
+        self.__output_str += "|   +---|   +---|   +---|   +---|   +---|   +---|   +---|   +---|   +---|   +---+---+\n"
         score_string = self.__draw_score()
-        print(score_string)
-
-        print("+-------+-------+-------+-------+-------+-------+-------+-------+-------+-----------+")
-
-        time.sleep(self.__pause_seconds)
+        self.__output_str += score_string + '\n'
+        self.__output_str += "+-------+-------+-------+-------+-------+-------+-------+-------+-------+-----------+\n"
 
     def __draw_roll_values(self) -> str:
         roll_value_string = ''
@@ -82,53 +88,56 @@ class TerminalOutput(ScoreOutput):
 
         return roll_value_string
 
-    # TODO: hier nicht mit idx arbeiten, das geht auch sauberer.
     def __get_roll_values_from_regular_frame(self, frame_idx: int) -> tuple[str, str]:
         roll1 = ' '
         roll2 = ' '
-        if frame_idx < len(self._frame_rolls):
-            roll_values = self._frame_rolls[frame_idx][0]
-            if len(roll_values) == 1:
-                if roll_values[0] == 10:
-                    roll2 = 'X'
-                else:
-                    roll1 = str(roll_values[0])
+        if frame_idx >= len(self._frame_rolls):
+            return roll1, roll2
+
+        roll_values = self._frame_rolls[frame_idx][0]
+        if len(roll_values) == 1:
+            if roll_values[0] == 10:
+                roll2 = 'X'
             else:
-                if sum(roll_values) == 10:
-                    roll1 = str(roll_values[0])
-                    roll2 = '/'
-                else:
-                    roll1, roll2 = roll_values
+                roll1 = str(roll_values[0])
+        else:
+            if sum(roll_values) == 10:
+                roll1 = str(roll_values[0])
+                roll2 = '/'
+            else:
+                roll1, roll2 = roll_values
+
         return roll1, roll2
 
-    # TODO: surely there is a nicer way!
     def __get_roll_values_from_last_frame(self) -> tuple[str, str, str]:
         roll1 = ' '
         roll2 = ' '
         roll3 = ' '
-        if len(self._frame_rolls) == 10:
-            rolls = self._frame_rolls[9][0]
+        if not len(self._frame_rolls) == 10:
+            return roll1, roll2, roll3
 
-            if rolls[0] == 10:
-                roll1 = 'X'
+        rolls = self._frame_rolls[9][0]
+
+        if rolls[0] == 10:
+            roll1 = 'X'
+        else:
+            roll1 = str(rolls[0])
+
+        if len(rolls) > 1:
+            if rolls[1] == 10:
+                roll2 = 'X'
+            elif rolls[0] + rolls[1] == 10 and roll1 != 'X':
+                roll2 = '/'
             else:
-                roll1 = str(rolls[0])
+                roll2 = str(rolls[1])
 
-            if len(rolls) > 1:
-                if rolls[1] == 10:
-                    roll2 = 'X'
-                elif rolls[0] + rolls[1] == 10 and rolls[1] != 0:
-                    roll2 = '/'
-                else:
-                    roll2 = str(rolls[1])
-
-            if len(rolls) > 2:
-                if rolls[2] == 10:
-                    roll3 = 'X'
-                elif rolls[1] + rolls[2] == 10 and rolls[2] != 0:
-                    roll3 = '/'
-                else:
-                    roll3 = str(rolls[2])
+        if len(rolls) > 2:
+            if rolls[2] == 10:
+                roll3 = 'X'
+            elif rolls[1] + rolls[2] == 10 and roll2 != '/':
+                roll3 = '/'
+            else:
+                roll3 = str(rolls[2])
 
         return roll1, roll2, roll3
 
@@ -137,7 +146,7 @@ class TerminalOutput(ScoreOutput):
         while len(scores) < 10:
             scores.append('')
 
-        # TODO: Can we do this in a loop?
+        # Could have done this in a loop, but this looks much more readable
         score_string = f"| {scores[0]:>4}  | {scores[1]:>4}  | {scores[2]:>4}  | {scores[3]:>4}  " \
                        f"| {scores[4]:>4}  | {scores[5]:>4}  | {scores[6]:>4}  | {scores[7]:>4}  " \
                        f"| {scores[8]:>4}  |   {scores[9]:>4}    |"
